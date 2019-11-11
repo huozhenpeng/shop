@@ -35,7 +35,23 @@
 
      待解决： * 触点在GridView上的时候无法上下滑动的问题
 
+               看后面的视频的时候，发现有属性可以禁用GridView的滑动，应该是可以解决这个问题的
+
              * 关于适配的问题，使用ScreenUtil适配时，注意ScreenUtil.instance.setWidth(100)和ScreenUtil.instance.setHeight(100)表现出的高度是不一样的
+
+
+
+###目前环境无法下载flutter插件，这是直接调用原生的插件，比如说url_launcher插件
+
+###第三次编写
+
+     知识点：下拉刷新、上拉加载、状态管理(主要是跨类)
+
+     三方知识：flutter_easyrefresh、json转Model(https://javiercbk.github.io/json_to_dart/)
+
+     系统知识：Provide实现状态管理
+
+
 
 
 

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/http/dio_agent.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+
+import 'bottom_floor.dart';
 class HomePage extends StatelessWidget
 {
   @override
@@ -26,6 +28,15 @@ class HomePage extends StatelessWidget
                     List<Map> recomands=(data['data']['category'] as List).cast();
 
                     String url=data['data']['advertesPicture']['PICTURE_ADDRESS'];
+                    String floor1Pic=data['data']['floor1Pic']['PICTURE_ADDRESS'];
+                    String floor2Pic=data['data']['floor2Pic']['PICTURE_ADDRESS'];
+                    String floor3Pic=data['data']['floor3Pic']['PICTURE_ADDRESS'];
+
+                    List<Map> floor1=(data['data']['floor1'] as List).cast();
+                    List<Map> floor2=(data['data']['floor2'] as List).cast();
+                    List<Map> floor3=(data['data']['floor3'] as List).cast();
+
+
 
                     return SingleChildScrollView(
                       child: Column(
@@ -34,6 +45,9 @@ class HomePage extends StatelessWidget
                           ProductCategroysWidget(info: info,datas:products),
                           AdBanner(url: url),
                           CategoryWidget(datas: recomands),
+                          FloorWidget(datas: floor1,url: floor1Pic),
+                          FloorWidget(datas: floor2,url: floor2Pic),
+                          FloorWidget(datas: floor3,url: floor3Pic),
 
                         ],
                       ),
@@ -196,6 +210,7 @@ class CategoryWidget extends StatelessWidget
         crossAxisSpacing: 6.0,
         mainAxisSpacing: 10.0,
         crossAxisCount: 5,
+          physics:NeverScrollableScrollPhysics(),
         children:datas.map((element){
          return _getItemWidget(element);
          }

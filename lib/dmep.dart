@@ -14,12 +14,22 @@ class App extends StatelessWidget {
         height: 300.0,
         width: 300.0,
         color: Colors.red,
-        child: Container(
-          height: 100.0,
-          width: 100.0,
-          color: Colors.blue,
-        ),
+        child: Custem()
       ),
     );
   }
 }
+class Custem extends StatelessWidget
+{
+  @override
+  Widget build(BuildContext context) {
+    print('');
+    return Container(
+      height: 100.0,
+      width: 100.0,
+      color: Colors.blue,
+    );
+  }
+
+}
+
