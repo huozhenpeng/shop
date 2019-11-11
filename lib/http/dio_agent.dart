@@ -20,3 +20,24 @@ Future<String> getHomeContent() async {
     print(e);
   }
 }
+
+///火爆商品
+Future<String> getPageBelowContent(int index) async {
+  try {
+    Dio dio = Dio();
+    dio.options.contentType = "application/x-www-form-urlencoded";
+
+    var formData = {'page': '$index'};
+    //queryParameters这个参数表示添加请求头
+    Response response =
+    await dio.post(servicePath['homePageBelowConten'], data: formData);
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception('接口异常');
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+

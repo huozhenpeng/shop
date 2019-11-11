@@ -2,11 +2,23 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_app/http/dio_agent.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 import 'bottom_floor.dart';
-class HomePage extends StatelessWidget
+import 'hot_regin.dart';
+class HomePage extends StatefulWidget
+{
+  @override
+  State<StatefulWidget> createState() {
+    // TODO: implement createState
+    return HomePageState();
+  }
+}
+
+
+class HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin
 {
   @override
   Widget build(BuildContext context) {
@@ -15,57 +27,82 @@ class HomePage extends StatelessWidget
         title: Text("百姓生活+"),
       ),
       body: FutureBuilder(
-        future: getHomeContent(),
+          future: getHomeContent(),
           builder: (context,snapshot)
-              {
-                if(snapshot.hasData)
-                  {
-                    var data=json.decode(snapshot.data.toString());
-                    List<Map> swiperDataList=(data['data']['slides'] as List).cast();
-                    String info="商品推荐";
-                    List<Map> products=(data['data']['recommend'] as List).cast();
+          {
+            if(snapshot.hasData)
+            {
+              var data=json.decode(snapshot.data.toString());
+              List<Map> swiperDataList=(data['data']['slides'] as List).cast();
+              String info="商品推荐";
+              List<Map> products=(data['data']['recommend'] as List).cast();
 
-                    List<Map> recomands=(data['data']['category'] as List).cast();
+              List<Map> recomands=(data['data']['category'] as List).cast();
 
-                    String url=data['data']['advertesPicture']['PICTURE_ADDRESS'];
-                    String floor1Pic=data['data']['floor1Pic']['PICTURE_ADDRESS'];
-                    String floor2Pic=data['data']['floor2Pic']['PICTURE_ADDRESS'];
-                    String floor3Pic=data['data']['floor3Pic']['PICTURE_ADDRESS'];
+              String url=data['data']['advertesPicture']['PICTURE_ADDRESS'];
+              String floor1Pic=data['data']['floor1Pic']['PICTURE_ADDRESS'];
+              String floor2Pic=data['data']['floor2Pic']['PICTURE_ADDRESS'];
+              String floor3Pic=data['data']['floor3Pic']['PICTURE_ADDRESS'];
 
-                    List<Map> floor1=(data['data']['floor1'] as List).cast();
-                    List<Map> floor2=(data['data']['floor2'] as List).cast();
-                    List<Map> floor3=(data['data']['floor3'] as List).cast();
+              List<Map> floor1=(data['data']['floor1'] as List).cast();
+              List<Map> floor2=(data['data']['floor2'] as List).cast();
+              List<Map> floor3=(data['data']['floor3'] as List).cast();
 
 
-
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: <Widget>[
-                          SwiperWidget(items: swiperDataList),
-                          ProductCategroysWidget(info: info,datas:products),
-                          AdBanner(url: url),
-                          CategoryWidget(datas: recomands),
-                          FloorWidget(datas: floor1,url: floor1Pic),
-                          FloorWidget(datas: floor2,url: floor2Pic),
-                          FloorWidget(datas: floor3,url: floor3Pic),
-
-                        ],
-                      ),
-                    );
-                  }
-                else
-                  {
-                    return Container(
-                      alignment: Alignment.topCenter,
-                      //loading效果
-                      child: Text("加载中。。。"),
-                    );
-                  }
-              }
+              return EasyRefresh(
+                child: ListView(
+                  children: <Widget>[
+                    SwiperWidget(items: swiperDataList),
+                    ProductCategroysWidget(info: info,datas:products),
+                    AdBanner(url: url),
+                    CategoryWidget(datas: recomands),
+                    FloorWidget(datas: floor1,url: floor1Pic),
+                    FloorWidget(datas: floor2,url: floor2Pic),
+                    FloorWidget(datas: floor3,url: floor3Pic),
+                    HotPage(datas: datas,)
+                  ],
+                ),
+                onLoad:  ()async
+                {
+                    await getPageBelowContent(page).then((value){
+                    var data=json.decode(value.toString());
+                    List<Map> newGoodsList = (data['data'] as List ).cast();
+                    datas.addAll(newGoodsList);
+                    });
+                    setState(() {
+                    page++;
+                    });
+                },
+//                footer: ClassicalFooter(
+//                    loadText:"上拉加载",
+//                  loadingText: "加载中...",
+//                  loadedText: "正在加载"
+//
+//                ),
+              );
+            }
+            else
+            {
+              return Container(
+                alignment: Alignment.topCenter,
+                //loading效果
+                child: Text("加载中。。。"),
+              );
+            }
+          }
       ),
     );
   }
+
+  int page=1;
+  List<Map> datas=[];
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
 }
+
 //banner
 class SwiperWidget extends StatelessWidget
 {
@@ -224,7 +261,7 @@ class CategoryWidget extends StatelessWidget
   {
     return InkWell(
       child:Container(
-        color: Colors.black12,
+        color: Colors.white,
         child:Column(
           children: <Widget>[
             _getImages(map['image']),
