@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/provide/category_data.dart';
 import 'package:flutter_app/splansh_page.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main(){
+  final categoryModelNotifier= CategoryModelNotifier();
+  runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(value: categoryModelNotifier)
+    ],
+    child: MyApp(),
+  )
+  );
+}
 
 class MyApp extends StatelessWidget {
 
