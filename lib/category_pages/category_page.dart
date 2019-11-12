@@ -7,6 +7,7 @@ import 'package:flutter_app/provide/category_data.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import 'category_content.dart';
 import 'catetory_tab.dart';
 class CategoryPage extends StatefulWidget
 {
@@ -26,11 +27,18 @@ class CategoryPageState extends State<CategoryPage> with AutomaticKeepAliveClien
     return Scaffold(
       appBar: AppBar(title: Text("商品分类"),),
       body: Container(
+        color: Colors.white,
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             LeftWidget(),
-            CatetoryTab()
+            Column(
+              children: <Widget>[
+                CatetoryTab(),
+                Expanded(child: CategoryContentWidget())
+              ],
+            )
+
           ],
         ),
       )

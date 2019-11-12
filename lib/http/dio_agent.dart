@@ -60,3 +60,28 @@ Future<String> getCategory() async {
     print(e);
   }
 }
+
+
+
+///分类内容
+Future<String> getCategoryContent(String categoryId,String categorySubId,int page) async {
+  try {
+    Dio dio = Dio();
+    dio.options.contentType = "application/x-www-form-urlencoded";
+    var data={
+      'categoryId':categoryId,
+      'categorySubId':categorySubId,
+      'page':page
+    };
+    //queryParameters这个参数表示添加请求头
+    Response response =
+    await dio.post(servicePath['getMallGoods'],data: data);
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception('接口异常');
+    }
+  } catch (e) {
+    print(e);
+  }
+}
