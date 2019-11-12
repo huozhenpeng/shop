@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/http/dio_agent.dart';
 import 'package:flutter_app/model/CategoryContent.dart';
 import 'package:flutter_app/provide/category_data.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 class CategoryContentWidget extends StatefulWidget
 {
+  //想着放这儿可以呢，结果还是不行，切换左边侧边栏都会累计
+  //int page=1;
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -16,23 +20,50 @@ class CategoryContentWidget extends StatefulWidget
 
 class CategoryContentWidgetState extends State<CategoryContentWidget>
 {
+  ScrollController scrollController=ScrollController();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Consumer<CategoryModelNotifier>(
         builder: (context,notifier,child){
+//
+//          try{
+//            if(notifier.page==1)
+//            {
+//              scrollController.jumpTo(0.0);
+//            }
+//          }
+//          catch(e)
+//          {
+//            print("发生异常${e.toString()}");
+//          }
 
           CategoryContent categoryContent=notifier.content;
           if(categoryContent!=null&&categoryContent.data!=null&&categoryContent.data.length>0)
             {
               return Container(
                 width: ScreenUtil.instance.setWidth(550),
-                child:ListView.builder(
-                  itemCount: categoryContent.data.length,
-                  itemBuilder: (context,index){
-                    return _getItemWidget(categoryContent.data[index]);
+                child:EasyRefresh(
+                    child: ListView.builder(
+                      itemCount: categoryContent.data.length,
+                      itemBuilder: (context,index){
+                        return _getItemWidget(categoryContent.data[index]);
+                      },
+                      controller: ScrollController(
+                        initialScrollOffset: 0,
+                        keepScrollOffset: false
+                      ),
+                    ),
+                  onLoad: () async{
+                      notifier.setPage(notifier.page+1);
+                      notifier.requestContent(notifier.value.bxMallSubDto[0].mallCategoryId,notifier.value.bxMallSubDto[0].mallSubId,notifier.page);
                   },
-                ) ,
+                ),
               );
             }
           else

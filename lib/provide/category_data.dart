@@ -32,8 +32,9 @@ class CategoryModelNotifier with ChangeNotifier
 
     notifyListeners();
 
+    _page=1;
     //获取中间内容区域数据
-    requestContent(_categoryItem.mallCategoryId, "", 1);
+    requestContent(_categoryItem.mallCategoryId, "", _page);
 
   }
 
@@ -48,10 +49,28 @@ class CategoryModelNotifier with ChangeNotifier
   void requestContent(String categoryId,String categorySubId,int page)
   {
 
+
     getCategoryContent(categoryId,categorySubId,page).then((result){
 
      CategoryContent categoryContent= CategoryContent.fromJson(json.decode(result));
-     _categoryContent=categoryContent;
+//     if(page>1&&categoryContent.data!=null&&categoryContent.data.length>0)
+//       {
+//         _categoryContent.data.addAll(categoryContent.data);
+//       }
+//     else
+//       {
+//         _categoryContent=categoryContent;
+//       }
+
+      print("当前页数是:$page");
+     if(page==1)
+       {
+         _categoryContent=categoryContent;
+       }
+     else if(categoryContent.data!=null&&categoryContent.data.length>0)
+       {
+         _categoryContent.data.addAll(categoryContent.data);
+       }
      notifyListeners();
     });
 
@@ -61,5 +80,13 @@ class CategoryModelNotifier with ChangeNotifier
 
   CategoryContent get content=>_categoryContent;
   CategoryItem get value=>_categoryItem;
+
+  int _page=1;
+  void setPage(int page)
+  {
+    _page=page;
+  }
+
+  int get page=>_page;
 
 }
