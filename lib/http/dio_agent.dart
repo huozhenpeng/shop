@@ -19,6 +19,8 @@ Future<String> getHomeContent() async {
   } catch (e) {
     print(e);
   }
+
+
 }
 
 ///火爆商品
@@ -76,6 +78,28 @@ Future<String> getCategoryContent(String categoryId,String categorySubId,int pag
     //queryParameters这个参数表示添加请求头
     Response response =
     await dio.post(servicePath['getMallGoods'],data: data);
+    if (response.statusCode == 200) {
+      return response.data;
+    } else {
+      throw Exception('接口异常');
+    }
+  } catch (e) {
+    print(e);
+  }
+}
+
+
+///详情
+Future<String> getGoodInfo(String goodId) async {
+  try {
+    Dio dio = Dio();
+    dio.options.contentType = "application/x-www-form-urlencoded";
+    var data={
+      'goodId':goodId,
+    };
+    //queryParameters这个参数表示添加请求头
+    Response response =
+    await dio.post(servicePath['getGoodDetailById'],data: data);
     if (response.statusCode == 200) {
       return response.data;
     } else {

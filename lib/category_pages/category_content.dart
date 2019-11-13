@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/http/dio_agent.dart';
 import 'package:flutter_app/model/CategoryContent.dart';
 import 'package:flutter_app/provide/category_data.dart';
+import 'package:flutter_app/routers/routes.dart';
 import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +81,9 @@ class CategoryContentWidgetState extends State<CategoryContentWidget>
   Widget _getItemWidget(ContentItem contentItem)
   {
     return InkWell(
-      onTap: (){},
+      onTap: (){
+        Routes.router.navigateTo(context, "${Routes.detailsPage}?id=${contentItem.goodsId}");
+      },
       child: Row(
         children: <Widget>[
           _getImage(contentItem),
